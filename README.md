@@ -3,7 +3,7 @@ Blackjack(21)
 
 by Mike Goren & Tina Ramsey
 
-This is a simple javascript blackjack game.
+This is a working javascript blackjack game.
 
 Installation
 ------------
