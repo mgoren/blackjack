@@ -126,21 +126,21 @@ var Person = {
       }
       var filename = rankTxt + suitTxt;
     }
-    if (initialDeal) {
+    // if (initialDeal) {
       $("#" + person).append("<figure><img src='img/" + filename + ".png'></figure>");
-    } else {
-      $("#" + person).append("<figure></figure>");
-      $("#" + person + " figure").filter(":last").hide();
-      $("#" + person + " figure").filter(":last").append("<img src='img/" + filename + ".png'>");
-      $("#" + person + " figure").filter(":last").fadeIn(2000);
-    }
+    // } else {
+    //   $("#" + person).append("<figure></figure>");
+    //   $("#" + person + " figure").filter(":last").hide();
+    //   $("#" + person + " figure").filter(":last").append("<img src='img/" + filename + ".png'>");
+    //   $("#" + person + " figure").filter(":last").fadeIn(2000);
+    // }
   }
 
 };
 
 $(document).ready(function() {
   $("#deal").click(function(event) {
-    $("#deal").hide();
+    // $("#deal").hide();
     $("#end-game").hide();
     $("#hit").show();
     $("#stand").show();
