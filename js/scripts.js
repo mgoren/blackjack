@@ -115,16 +115,20 @@ var Person = {
   },
 
   displayCard: function(person, card) {
-    if (card.suit===0) {suitTxt="clubs";}
-    if (card.suit===1) {suitTxt="diamonds";}
-    if (card.suit===2) {suitTxt="hearts";}
-    if (card.suit===3) {suitTxt="spades";}
-    if (card.rank==="ace") {
-      rankTxt="14";
+    if (card === "cardBack") {
+      var filename = "b1fv";
     } else {
-      rankTxt = card.rank.toString();
+      if (card.suit===0) {suitTxt="clubs";}
+      if (card.suit===1) {suitTxt="diamonds";}
+      if (card.suit===2) {suitTxt="hearts";}
+      if (card.suit===3) {suitTxt="spades";}
+      if (card.rank==="ace") {
+        rankTxt="14";
+      } else {
+        rankTxt = card.rank.toString();
+      }
+      var filename = rankTxt + suitTxt;
     }
-    var filename = rankTxt + suitTxt;
     $("#" + person).append("<figure><img src='img/" + filename + ".png'></figure>");
   }
 
@@ -139,9 +143,9 @@ $(document).ready(function() {
     game.deal();
 
     $("#dealer").empty();
-    game.dealer.hand.forEach(function(card) {
-      game.dealer.displayCard("dealer", card)
-    });
+      game.dealer.displayCard("dealer", game.dealer.hand[0])
+      game.dealer.displayCard("dealer", "cardBack")
+
 
     $("#player").empty();
     game.player.hand.forEach(function(card) {
@@ -162,6 +166,11 @@ $(document).ready(function() {
   });
 
   $("#stand").click(function(event) {
+
+    // flip dealer's card
+    $("#dealer figure").filter(":last").remove();
+    game.dealer.displayCard("dealer", game.dealer.hand[1]);
+
     while (game.dealer.maxScore() < 17) {
       game.dealer.hit();
       var newCard = game.dealer.hand[game.dealer.hand.length-1];
