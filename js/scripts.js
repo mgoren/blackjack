@@ -1,6 +1,3 @@
-
-
-
 var game = {
   startGame: function() {
     this.deck = this.createDeck();
@@ -36,11 +33,11 @@ var game = {
   },
 
   endGame: function() {
-    if (this.player.busted()) { return "dealer wins"; }
-    if (this.dealer.busted()) { return "player wins"; }
-    if (this.player.maxScore() > this.dealer.maxScore()) { return "player wins"; }
-    if (this.dealer.maxScore() > this.player.maxScore()) { return "dealer wins"; }
-    else { return "tie"; }
+    if (this.player.busted()) { return "Player is bust."; }
+    if (this.dealer.busted()) { return "Dealer is bust. Player wins!"; }
+    if (this.player.maxScore() > this.dealer.maxScore()) { return "Player wins!"; }
+    if (this.dealer.maxScore() > this.player.maxScore()) { return "Sorry. Dealer wins."; }
+    else { return "Push (tie)"; }
   }
 
 };
@@ -114,7 +111,7 @@ var Person = {
     return score;
   },
 
-  displayCard: function(person, card) {
+  displayCard: function(person, card, initialDeal) {
     if (card === "cardBack") {
       var filename = "b1fv";
     } else {
@@ -129,28 +126,45 @@ var Person = {
       }
       var filename = rankTxt + suitTxt;
     }
-    $("#" + person).append("<figure><img src='img/" + filename + ".png'></figure>");
+    if (initialDeal) {
+      $("#" + person).append("<figure><img src='img/" + filename + ".png'></figure>");
+    } else {
+      $("#" + person).append("<figure></figure>");
+      $("#" + person + " figure").filter(":last").hide();
+      $("#" + person + " figure").filter(":last").append("<img src='img/" + filename + ".png'>");
+      $("#" + person + " figure").filter(":last").fadeIn(2000);
+    }
   }
 
 };
 
 $(document).ready(function() {
   $("#deal").click(function(event) {
+    $("#deal").hide();
     $("#end-game").hide();
     $("#hit").show();
     $("#stand").show();
     game.startGame();
     game.deal();
 
+    // display dealer cards
     $("#dealer").empty();
-      game.dealer.displayCard("dealer", game.dealer.hand[0])
-      game.dealer.displayCard("dealer", "cardBack")
+      game.dealer.displayCard("dealer", game.dealer.hand[0], true)
+      game.dealer.displayCard("dealer", "cardBack", true)
 
-
+    // display player cards
     $("#player").empty();
     game.player.hand.forEach(function(card) {
-      game.player.displayCard("player", card)
+      game.player.displayCard("player", card, true)
     });
+
+    if(game.player.maxScore() === 21) {
+      $("#end-game").text("Player wins with natural 21!");
+      $("#end-game").show();
+      $("#hit").hide();
+      $("#stand").hide();
+    }
+
   });
 
   $("#hit").click(function(event) {
@@ -169,7 +183,7 @@ $(document).ready(function() {
 
     // flip dealer's card
     $("#dealer figure").filter(":last").remove();
-    game.dealer.displayCard("dealer", game.dealer.hand[1]);
+    game.dealer.displayCard("dealer", game.dealer.hand[1], true);
 
     while (game.dealer.maxScore() < 17) {
       game.dealer.hit();
