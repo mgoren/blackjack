@@ -140,7 +140,7 @@ var Person = {
 
 $(document).ready(function() {
   $("#deal").click(function(event) {
-    // $("#deal").hide();
+    $("#deal").hide();
     $("#end-game").hide();
     $("#hit").show();
     $("#stand").show();
@@ -161,6 +161,7 @@ $(document).ready(function() {
     if(game.player.maxScore() === 21) {
       $("#end-game").text("Player wins with natural 21!");
       $("#end-game").show();
+      $("#deal").show();
       $("#hit").hide();
       $("#stand").hide();
     }
@@ -174,6 +175,7 @@ $(document).ready(function() {
     if(game.player.busted()) {
       $("#end-game").text("Player is bust!");
       $("#end-game").show();
+      $("#deal").show();
       $("#hit").hide();
       $("#stand").hide();
     }
@@ -193,6 +195,7 @@ $(document).ready(function() {
     var winner = game.endGame();
     $("#end-game").text(winner);
     $("#end-game").show();
+    $("#deal").show();
     $("#hit").hide();
     $("#stand").hide();
   });
