@@ -1,3 +1,6 @@
+
+
+
 var game = {
   startGame: function() {
     this.deck = this.createDeck();
@@ -109,6 +112,66 @@ var Person = {
     }
 
     return score;
+  },
+
+  displayCard: function(person, card) {
+    if (card.suit===0) {suitTxt="clubs";}
+    if (card.suit===1) {suitTxt="diamonds";}
+    if (card.suit===2) {suitTxt="hearts";}
+    if (card.suit===3) {suitTxt="spades";}
+    if (card.rank==="ace") {
+      rankTxt="14";
+    } else {
+      rankTxt = card.rank.toString();
+    }
+    var filename = rankTxt + suitTxt;
+    $("#" + person).append("<figure><img src='img/" + filename + ".png'></figure>");
   }
 
 };
+
+$(document).ready(function() {
+  $("#deal").click(function(event) {
+    $("#end-game").hide();
+    $("#hit").show();
+    $("#stand").show();
+    game.startGame();
+    game.deal();
+
+    $("#dealer").empty();
+    game.dealer.hand.forEach(function(card) {
+      game.dealer.displayCard("dealer", card)
+    });
+
+    $("#player").empty();
+    game.player.hand.forEach(function(card) {
+      game.player.displayCard("player", card)
+    });
+  });
+
+  $("#hit").click(function(event) {
+    game.player.hit();
+    var newCard = game.player.hand[game.player.hand.length-1];
+    game.player.displayCard("player", newCard);
+    if(game.player.busted()) {
+      $("#end-game").text("Player is bust!");
+      $("#end-game").show();
+      $("#hit").hide();
+      $("#stand").hide();
+    }
+  });
+
+  $("#stand").click(function(event) {
+    while (game.dealer.maxScore() < 17) {
+      game.dealer.hit();
+      var newCard = game.dealer.hand[game.dealer.hand.length-1];
+      game.dealer.displayCard("dealer", newCard);
+    }
+    var winner = game.endGame();
+    $("#end-game").text(winner);
+    $("#end-game").show();
+    $("#hit").hide();
+    $("#stand").hide();
+  });
+
+});
